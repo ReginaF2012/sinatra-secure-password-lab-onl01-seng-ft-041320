@@ -16,9 +16,28 @@ class ApplicationController < Sinatra::Base
     erb :signup
   end
 
-  post "/signup" do
-    #your code here
+  post '/account' do
+    #binding.pry
+    @user = User.find(session[:user_id])
+    amount_withdrawn = BigDecimal(params[:withdraw])
+    amount_deposited = BigDecimal(params[:deposit])
+    if @user && @user.authenticate(params[:password])
+      @user.balance += amount_deposited
+      @user.balance -= amount_withdrawn
+      @user.update(balance: @user.balance)
+      redirect to '/account'
+    else
+      redirect to '/failure'
+    end
+  end
 
+  post "/signup" do
+    user = User.new(username: params[:username], password: params[:password])
+    if user.save
+      redirect to '/login'
+    else
+      redirect '/failure'
+    end
   end
 
   get '/account' do
@@ -32,7 +51,13 @@ class ApplicationController < Sinatra::Base
   end
 
   post "/login" do
-    ##your code here
+    user = User.find_by(username: params[:username])
+    if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      redirect '/account'
+    else
+      redirect '/failure'
+    end
   end
 
   get "/failure" do

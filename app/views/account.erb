@@ -1,5 +1,23 @@
-<h1>Welcome</h1>
+<h1>Welcome <%= @user.username %></h1>
 
-<p>We are currently working on your account.</p>
+<h3>Account Balance: $<%= @user.balance %></h3>
+
+<form method="POST" action="/account">
+<p style="visibility: hidden;">"We are currently working on your account."</p>
+  <h3>How much would you like to withdraw?</h3>
+    <p>
+      <label for="withdraw">Amount:</label>
+      <input type="number" name="withdraw" value="0.00" step="0.01" max="<%= @user.balance %>" min="0.00">
+    </p>
+  <h3>How much would you like to deposit?</h3>
+    <p>
+      <label for="deposit">Amount:</label>
+      <input type="number" value="0.00" name="deposit" step="0.01" min="0.00">
+    </p><br>
+    <p><label for="password">Password:</label>
+    <input type="password" name="password">
+    </p>
+    <input type="submit" value="Complete Transaction">
+</form>
 
 <p><a href="/logout">Log Out</a></p>
